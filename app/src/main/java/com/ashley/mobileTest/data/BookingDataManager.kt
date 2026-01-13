@@ -40,7 +40,7 @@ class BookingDataManager private constructor(context: Context) {
 
      * @author: liangxy
      */
-    fun fetchmobileTestData() {
+    fun fetchMobileTestData() {
         _isLoading.value = true
         _error.value = null
         

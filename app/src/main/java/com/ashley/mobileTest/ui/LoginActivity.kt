@@ -2,12 +2,12 @@ package com.ashley.mobileTest.ui
 
 /**
  * @description: 登录页
-
  * @author: liangxy
  */
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -40,7 +42,8 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-
+    var errorMessage by remember { mutableStateOf("") }
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
@@ -57,7 +60,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = {username = it
+                    // 清除错误信息
+                    if (errorMessage.isNotEmpty()) {
+                        errorMessage = ""
+                    } },
                 label = { Text("Username") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -65,7 +72,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    // 清除错误信息
+                    if (errorMessage.isNotEmpty()) {
+                        errorMessage = ""
+                    }
+                },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
@@ -77,11 +90,23 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             } else {
                 Button(
                     onClick = {
-                        scope.launch {
-                            isLoading = true
-                            delay(2000) // Simulate network login
-                            isLoading = false
-                            onLoginSuccess()
+                        // 验证用户名和密码
+                        when {
+                            username.isEmpty() -> {
+                                Toast.makeText(context, "Please enter username", Toast.LENGTH_SHORT).show()
+                            }
+                            password.isEmpty() -> {
+                                Toast.makeText(context, "Please enter password", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                // 验证通过，执行登录
+                                scope.launch {
+                                    isLoading = true
+                                    delay(2000) // Simulate network login
+                                    isLoading = false
+                                    onLoginSuccess()
+                                }
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxWidth()

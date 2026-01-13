@@ -51,7 +51,7 @@ import androidx.compose.runtime.livedata.observeAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mobileTestDetailScreen(viewModel: BookingViewModel) {
+fun BookingDetailScreen(viewModel: BookingViewModel) {
 
     val mobileTestDataState = viewModel.mobileTestData.observeAsState()
     val mobileTestData = mobileTestDataState.value
@@ -83,7 +83,7 @@ fun mobileTestDetailScreen(viewModel: BookingViewModel) {
             ) {
                 // 1. 基础信息卡片
                 item {
-                    mobileTestBaseInfoCard(mobileTest = mobileTestData)
+                    MobileTestBaseInfoCard(mobileTest = mobileTestData)
                 }
                 // 2. 航段列表
                 items(mobileTestData.segments) { segment ->
@@ -96,7 +96,7 @@ fun mobileTestDetailScreen(viewModel: BookingViewModel) {
 
 //基础信息卡片
 @Composable
-fun mobileTestBaseInfoCard(mobileTest: Booking?) {
+fun MobileTestBaseInfoCard(mobileTest: Booking?) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(
@@ -180,7 +180,7 @@ fun SegmentItem(segment: Segment) {
             Icon(
                 imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                 contentDescription = if (expanded) "Collapse" else "Expand",
-                tint = MaterialTheme.colorScheme.primary
+                tint = colorScheme.primary
             )
         }
         //展开后的内容
@@ -188,11 +188,11 @@ fun SegmentItem(segment: Segment) {
             Column(modifier = Modifier.padding(16.dp)) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                // Origin Section
+                // 出发地
                 Text(
                     text = "Origin",
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = colorScheme.primary,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
                 LocationInfo(location = segment.originAndDestinationPair.origin)
@@ -200,11 +200,11 @@ fun SegmentItem(segment: Segment) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Destination Section
+                // 目的地
                 Text(
                     text = "Destination",
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = colorScheme.primary,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
                 LocationInfo(location = segment.originAndDestinationPair.destination)

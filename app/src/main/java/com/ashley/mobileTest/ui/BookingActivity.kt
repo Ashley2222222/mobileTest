@@ -31,7 +31,7 @@ class BookingActivity: AppCompatActivity() {
 
         setContent {
             MaterialTheme {
-                mobileTestDetailScreen(viewModel = viewModel)
+                BookingDetailScreen(viewModel = viewModel)
             }
         }
     }
